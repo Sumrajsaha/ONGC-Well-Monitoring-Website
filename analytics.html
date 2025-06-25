@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONGC Well Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary:rgb(161, 13, 13);
+            --primary-dark:rgb(113, 0, 0);
+            --secondary: #ff6f00;
+            --secondary-light: #ffa040;
+            --accent: #29b6f6;
+            --light: #f5f9ff;
+            --dark: #0a1930;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --gray: #eceff1;
+            --border: #cfd8dc;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0a1930 0%,rgb(108, 26, 26) 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-left: 20px;
+        }
+
+        .user-info i {
+            font-size: 20px;
+        }
+
+        .user-info span {
+            font-weight: 500;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: rgba(161, 13, 13, 0.95);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+        }
+        
+        .logo-icon {
+            font-size: 28px;
+            color: var(--secondary-light);
+        }
+        
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            letter-spacing: 0.5px;
+        }
+        
+        .logo-text span {
+            color: var(--secondary-light);
+        }
+        /* Add to your CSS */
+        .logo-icon img {
+            height: 45px;
+            width: auto;
+            min-width: 120px; /* Prevents collapse if image missing */
+            object-fit: contain;
+        }
+
+        /* Fallback if image doesn't load */
+        .logo-icon:before {
+            content: "ONGC";
+            display: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logo-icon img[src=""]:not([src]) {
+            opacity: 0;
+        }
+
+        .logo-icon img[src=""]:not([src]) + .logo-text {
+            margin-left: 0;
+        }
+        /* Navigation */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        nav a:hover, nav a.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--secondary-light);
+        }
+        
+        nav i {
+            font-size: 18px;
+        }
+        
+        /* Main Content */
+        .dashboard {
+            padding: 30px 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .dashboard-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 32px;
+        }
+        
+        .dashboard-subtitle {
+            font-weight: 300;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        /* Chart Containers */
+        .chart-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-container {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-title {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 18px;
+        }
+        
+        .chart-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chart-btn {
+            background: var(--gray);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .chart-btn:hover {
+            background: var(--border);
+        }
+        
+        .chart-btn i {
+            font-size: 14px;
+            color: var(--dark);
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        /* Status Distribution */
+        .status-distribution {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .status-badge {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .status-flowing { background: var(--success); }
+        .status-sick { background: var(--warning); }
+        .status-dry { background: #616161; }
+        .status-unknown { background: #9e9e9e; }
+        
+        .status-info {
+            flex: 1;
+        }
+        
+        .status-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .status-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: var(--gray);
+            overflow: hidden;
+        }
+        
+        .status-progress {
+            height: 100%;
+        }
+        
+        /* Field Comparison */
+        .field-comparison {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .field-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .field-btn {
+            padding: 8px 15px;
+            background: var(--gray);
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .field-btn:hover {
+            background: var(--border);
+        }
+        
+        .field-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* KPI Styles */
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .kpi-card {
+            background: var(--gray);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .kpi-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .kpi-label {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 20px 0;
+            font-size: 14px;
+        }
+        
+        /* Loading spinner */
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid var(--accent);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .chart-container {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <img src="https://www.ongcindia.com/documents/77751/2132071/ongcLogo.jpg" 
+                         alt="ONGC Logo" 
+                         onerror="this.style.opacity='0'; this.nextElementSibling.style.display='block'">
+                    <div style="display: none; color: white; font-weight: 700; font-size: 18px;">ONGC</div>
+                    </div>
+                    <div class="logo-text">ONGC <span>Well Analytics</span></div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="/analytics" class="active"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li><a href="/map_view"><i class="fas fa-map-marked-alt"></i> Map View</a></li>
+                        <li><a href="/settings"><i class="fas fa-cog"></i> Settings</a></li>
+                    </ul>
+                </nav>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>{{ session.user }}</span>
+                    <a href="/logout" style="margin-left: 10px; color: white;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <div>
+                    <h1 class="dashboard-title">Advanced Analytics</h1>
+                    <p class="dashboard-subtitle">Detailed analysis and insights for optimal decision-making</p>
+                </div>
+                <div class="time-filter">
+                    <select id="timePeriod">
+                        <option>Last 24 hours</option>
+                        <option selected>Last 7 days</option>
+                        <option>Last 30 days</option>
+                        <option>Last 6 months</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- First Row of Charts -->
+            <div class="chart-row">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-line"></i>Production Trend Analysis</h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" title="Download as PNG"><i class="fas fa-download"></i></button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Production Efficiency by Field</h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" title="Download as PNG"><i class="fas fa-download"></i></button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="efficiencyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Row of Charts -->
+            <div class="chart-row">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Well Performance Comparison</h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" title="Download as PNG"><i class="fas fa-download"></i></button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Anomaly Detection</h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" title="Download as PNG"><i class="fas fa-download"></i></button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="anomalyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third Row - Detailed Analysis -->
+            <div class="chart-row">
+                <div class="chart-container" style="flex: 2;">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Production Forecasting</h3>
+                        <div class="chart-actions">
+                            <div class="field-selector" id="forecastSelector">
+                                <button class="field-btn active" data-field="all">All Fields</button>
+                                <button class="field-btn" data-field="agartala">Agartala</button>
+                                <button class="field-btn" data-field="konaban">Konaban</button>
+                                <button class="field-btn" data-field="manikyanagar">Manikyanagar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Key Performance Indicators</h3>
+                    </div>
+                    <div class="kpi-container" id="kpiContainer">
+                        <div class="kpi-card">
+                            <div class="kpi-value">98.7%</div>
+                            <div class="kpi-label">Uptime</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value">4.2%</div>
+                            <div class="kpi-label">Production Loss</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value">12</div>
+                            <div class="kpi-label">Anomalies Detected</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value">$2.4M</div>
+                            <div class="kpi-label">Savings Potential</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>ONGC Well Monitoring System &copy; 2025 | Analytics</p>
+            <p>Last Updated: June 22, 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize charts for analytics page
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Function to download chart as PNG
+            function setupChartDownload() {
+                document.querySelectorAll('.chart-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const canvas = this.closest('.chart-container').querySelector('canvas');
+                        const link = document.createElement('a');
+                        link.download = 'chart.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    });
+                });
+            }
+            
+            // Initialize charts with data from the API
+            async function initCharts() {
+                // Production Trend Chart
+                const trendCtx = document.getElementById('trendChart').getContext('2d');
+                const trendData = await fetch('/api/analytics/trend').then(res => res.json());
+                new Chart(trendCtx, {
+                    type: 'line',
+                    data: {
+                        labels: trendData.labels,
+                        datasets: trendData.datasets.map((ds, index) => ({
+                            ...ds,
+                            borderColor: index === 0 ? 'rgba(41, 182, 246, 1)' : 'rgba(76, 175, 80, 1)',
+                            backgroundColor: index === 0 ? 'rgba(41, 182, 246, 0.1)' : 'rgba(76, 175, 80, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }))
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false
+                            }
+                        }
+                    }
+                });
+                
+                // Efficiency Chart
+                const efficiencyCtx = document.getElementById('efficiencyChart').getContext('2d');
+                const efficiencyData = await fetch('/api/analytics/efficiency').then(res => res.json());
+                new Chart(efficiencyCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: efficiencyData.labels,
+                        datasets: efficiencyData.datasets.map((ds, index) => {
+                            const colors = [
+                                { bg: 'rgba(41, 182, 246, 0.2)', border: 'rgba(41, 182, 246, 1)', point: 'rgba(41, 182, 246, 1)' },
+                                { bg: 'rgba(255, 111, 0, 0.2)', border: 'rgba(255, 111, 0, 1)', point: 'rgba(255, 111, 0, 1)' },
+                                { bg: 'rgba(156, 39, 176, 0.2)', border: 'rgba(156, 39, 176, 1)', point: 'rgba(156, 39, 176, 1)' }
+                            ];
+                            return {
+                                ...ds,
+                                backgroundColor: colors[index].bg,
+                                borderColor: colors[index].border,
+                                pointBackgroundColor: colors[index].point
+                            };
+                        })
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                angleLines: { display: true },
+                                suggestedMin: 50,
+                                suggestedMax: 100
+                            }
+                        }
+                    }
+                });
+                
+                // Performance Chart
+                const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+                const performanceData = await fetch('/api/analytics/performance').then(res => res.json());
+                new Chart(performanceCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: performanceData.labels,
+                        datasets: performanceData.datasets.map((ds, index) => ({
+                            ...ds,
+                            backgroundColor: index === 0 ? 'rgba(41, 182, 246, 0.7)' : 'rgba(255, 152, 0, 0.7)'
+                        }))
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Gas Production (m³/d)' }
+                            }
+                        }
+                    }
+                });
+                
+                // Anomaly Chart
+                const anomalyCtx = document.getElementById('anomalyChart').getContext('2d');
+                const anomalyData = await fetch('/api/analytics/anomaly').then(res => res.json());
+                new Chart(anomalyCtx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: anomalyData.datasets.map((ds, index) => ({
+                            ...ds,
+                            backgroundColor: index === 0 ? 'rgba(76, 175, 80, 0.7)' : 'rgba(244, 67, 54, 0.7)'
+                        }))
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { title: { display: true, text: 'FTHP (psi)' } },
+                            y: { title: { display: true, text: 'Gas Production (m³/d)' } }
+                        }
+                    }
+                });
+                
+                // Forecast Chart
+                const forecastCtx = document.getElementById('forecastChart').getContext('2d');
+                const forecastData = await fetch('/api/analytics/forecast').then(res => res.json());
+                new Chart(forecastCtx, {
+                    type: 'line',
+                    data: {
+                        labels: forecastData.labels,
+                        datasets: forecastData.datasets.map((ds, index) => ({
+                            ...ds,
+                            borderColor: index === 0 ? 'rgba(41, 182, 246, 1)' : 'rgba(255, 152, 0, 1)',
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            borderDash: index === 1 ? [5,5] : []
+                        }))
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: false } }
+                    }
+                });
+                
+                // Setup download buttons
+                setupChartDownload();
+            }
+            
+            // Initialize charts
+            await initCharts();
+            
+            // Add event listeners for forecast selector
+            const forecastButtons = document.querySelectorAll('#forecastSelector .field-btn');
+            forecastButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    forecastButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    // In a real app, this would update the forecast chart
+                    console.log('Selected field:', this.getAttribute('data-field'));
+                });
+            });
+            
+            // Add event listener for time period selector
+            document.getElementById('timePeriod').addEventListener('change', function() {
+                // In a real app, this would reload data for the selected time period
+                console.log('Time period changed to:', this.value);
+            });
+        });
+    </script>
+</body>
+</html>

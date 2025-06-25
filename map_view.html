@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONGC Field Map</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0a1930 0%,rgb(108, 26, 26) 100%);
+            color: #0a1930;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+        /* Header Styles */
+        header {
+            background: rgba(161, 13, 13, 0.95);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon img {
+            height: 45px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            letter-spacing: 0.5px;
+            color: white;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        nav a:hover, nav a.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffa040;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-left: 20px;
+        }
+
+        .user-info i {
+            font-size: 20px;
+        }
+
+        .user-info span {
+            font-weight: 500;
+        }
+
+        /* Map View Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+
+        .header {
+            background: linear-gradient(to right, #6a0000, #6a0000);
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.75rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            max-width: 1300px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .intro {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .intro h2 {
+            color: #6a0000;
+            margin-bottom: 15px;
+            font-size: 2rem;
+        }
+
+        .intro p {
+            color: #495057;
+            font-size: 1.05rem;
+        }
+
+        .footer {
+            background-color: #ffffff;
+            border-top: 1px solid #dee2e6;
+            padding: 40px 0;
+            margin-top: 30px;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        .footer-section {
+            background: #f1f3f5;
+            border-radius: 10px;
+            padding: 25px;
+            flex: 1;
+            min-width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .footer-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .footer-section h3 {
+            color: #6a0000; /* Applying the color here */
+            border-bottom: 2px solid #00a8e8;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            font-size: 1.4rem;
+        }
+
+        .footer-section p {
+            margin-bottom: 10px;
+            font-size: 0.98rem;
+            color: #343a40;
+        }
+
+        .footer-section a {
+            color: #0077b6;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            text-decoration: underline;
+            color: #023e8a;
+        }
+
+        .field-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .field-box ul li a {
+            display: inline-block;
+            background-color: #6a0000; /* New color here */
+            color: #fff;
+            padding: 10px 16px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .field-box ul li a:hover {
+            background-color: #b30000; /* Slight variation on hover */
+            transform: translateX(6px);
+        }
+
+        .map {
+            border-radius: 10px;
+            overflow: hidden;
+            transition: outline 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .map iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+            display: block;
+        }
+
+        .highlight {
+            box-shadow: 0 0 20px #00a8e8 !important;
+            outline: 3px solid #00b4d8;
+        }
+
+        .footer-info {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+        
+        /* Page Footer */
+        .page-footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 20px 0;
+            font-size: 14px;
+            
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <img src="https://www.ongcindia.com/documents/77751/2132071/ongcLogo.jpg" 
+                             alt="ONGC Logo" 
+                             onerror="this.style.opacity='0'; this.nextElementSibling.style.display='block'">
+                        <div style="display: none; color: white; font-weight: 700; font-size: 18px;">ONGC</div>
+                    </div>
+                    <div class="logo-text">ONGC <span>Map View</span></div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="/analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li><a href="/map_view" class="active"><i class="fas fa-map-marked-alt"></i> Map View</a></li>
+                        <li><a href="/settings"><i class="fas fa-cog"></i> Settings</a></li>
+                    </ul>
+                </nav>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>{{ session.user }}</span>
+                    <a href="/logout" style="margin-left: 10px; color: white;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Map View Content -->
+    <div class="main-container">
+
+        <div class="header">
+            <h1>ONGC Tripura Asset</h1>
+            <p>Contact Information for All Field Locations</p>
+        </div>
+
+        <div class="main-container">
+            <div class="intro">
+                <h2>About ONGC Tripura Asset</h2>
+                <p>Oil and Natural Gas Corporation (ONGC) is India's largest oil and gas exploration and production company. The Tripura Asset plays a crucial role in ONGC's operations with several gas fields across the state.</p>
+                <p>Below you'll find contact information and locations for all our field offices in Tripura. Click on any field name to navigate to its map location.</p>
+            </div>
+
+            <!-- Field Sections -->
+            <footer class="footer">
+                <div class="footer-container">
+                    <div class="footer-section field-box">
+                        <h3>Field name</h3>
+                        <ul>
+                            <li><a href="#">Agartala Dome</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Reach Us</h3>
+                        <p><strong>Location Office:</strong><br>
+                        P8WR+9J4, Prabhapur, Tripura 799130,<br>
+                        Agartala Tripura</p>
+                        <p><strong>Corporate Identity Number:</strong><br>
+                        L74899DL1993GOI054155</p>
+                        <p><strong>Telephone No:</strong> 011-26750998; <strong>Fax No:</strong> 011-26750991 / 26120991</p>
+                        <p><strong>For registering any grievances, please visit<br>ONGC Grievance portal:</strong><br>
+                        <a href="https://grievance.ongc.co.in" target="_blank">https://grievance.ongc.co.in</a></p>
+                    </div>
+
+                    <div class="footer-section map">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13466.903700555877!2d91.341576!3d23.745893!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x37538d30a8a36565%3A0xea32d0d0f776e603!2sADB%20DOME%20ONGC!5e1!3m2!1sen!2sin!4v1749033409598!5m2!1sen!2sin"
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </footer>
+
+            <footer class="footer">
+                <div class="footer-container">
+                    <div class="footer-section field-box">
+                        <h3>Field name</h3>
+                        <ul>
+                            <li><a href="#">Konaban GCS</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Reach Us</h3>
+                        <p><strong>Location Office:</strong><br>
+                        M5WG+VRJ, Unnamed Road, Konaban, Tripura 799102<br>
+                        Tripura</p>
+                        <p><strong>Corporate Identity Number:</strong><br>
+                        L74899DL1993GOI054155</p>
+                        <p><strong>Telephone No:</strong> 011-26750998; <strong>Fax No:</strong> 011-26750991 / 26120991</p>
+                        <p><strong>For registering any grievances, please visit<br>ONGC Grievance portal:</strong><br>
+                        <a href="https://grievance.ongc.co.in" target="_blank">https://grievance.ongc.co.in</a></p>
+                    </div>
+
+                    <div class="footer-section map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6735.9661942060875!2d91.17701700000002!3d23.697213!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x375475b246741b3f%3A0xef81124dd4779530!2sONGC%20Konaban%20GCS!5e1!3m2!1sen!2sin!4v1750401528766!5m2!1sen!2sin" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </footer>
+
+            <footer class="footer">
+                <div class="footer-container">
+                    <div class="footer-section field-box">
+                        <h3>Field name</h3>
+                        <ul>
+                            <li><a href="#">Manikyanagar Tripura</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Reach Us</h3>
+                        <p><strong>Location Office:</strong><br>J5GW+69F, Manikyanagar, Tripura 799102<br>
+                        Tripura</p>
+                        <p><strong>Corporate Identity Number:</strong><br>
+                        L74899DL1993GOI054155</p>
+                        <p><strong>Telephone No:</strong> 011-26750998; <strong>Fax No:</strong> 011-26750991 / 26120991</p>
+                        <p><strong>For registering any grievances, please visit<br>ONGC Grievance portal:</strong><br>
+                        <a href="https://grievance.ongc.co.in" target="_blank">https://grievance.ongc.co.in</a></p>
+                    </div>
+
+                    <div class="footer-section map">
+                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3369.829327381885!2d91.19333917497163!3d23.625552278755677!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x375476371aaaaaab%3A0xf23e7a03438f0a2!2sRokhia%20Gas%20Thermal%20Power%20Station!5e1!3m2!1sen!2sin!4v1750399055480!5m2!1sen!2sin" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </footer>
+
+            <footer class="footer">
+                <div class="footer-container">
+                    <div class="footer-section field-box">
+                        <h3>Field name</h3>
+                        <ul>
+                            <li><a href="#">Gojalia GCS</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Reach Us</h3>
+                        <p><strong>Location Office:</strong><br>
+                        4J97+P3C, Kalachara, Bhuratali, Tripura 799143<br>
+                        Tripura</p>
+                        <p><strong>Corporate Identity Number:</strong><br>
+                        L74899DL1993GOI054155</p>
+                        <p><strong>Telephone No:</strong> 011-26750998; <strong>Fax No:</strong> 011-26750991 / 26120991</p>
+                        <p><strong>For registering any grievances, please visit<br>ONGC Grievance portal:</strong><br>
+                        <a href="https://grievance.ongc.co.in" target="_blank">https://grievance.ongc.co.in</a></p>
+                    </div>
+
+                    <div class="footer-section map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6765.442742590271!2d91.61263!3d23.119318!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3753119e73d3570d%3A0xc0407ab3f96a5c8c!2sONGC%20GOJALIA%20GCS!5e1!3m2!1sen!2sin!4v1750399247765!5m2!1sen!2sin" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </footer>
+
+            <footer class="footer">
+                <div class="footer-container">
+                    <div class="footer-section field-box">
+                        <h3>Field name</h3>
+                        <ul>
+                            <li><a href="#">Khubal GCS</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Reach Us</h3>
+                        <p><strong>Location Office:</strong><br>
+                        65XV+RP4, Jalabasa, Pekuchhara, Tripura 799260<br>
+                        Tripura</p>
+                        <p><strong>Corporate Identity Number:</strong><br>
+                        L74899DL1993GOI054155</p>
+                        <p><strong>Telephone No:</strong> 011-26750998; <strong>Fax No:</strong> 011-26750991 / 26120991</p>
+                        <p><strong>For registering any grievances, please visit<br>ONGC Grievance portal:</strong><br>
+                        <a href="https://grievance.ongc.co.in" target="_blank">https://grievance.ongc.co.in</a></p>
+                    </div>
+
+                    <div class="footer-section map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6707.115507605693!2d92.19429875750022!3d24.250256699999998!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3751f3cfe5d22041%3A0xbc1ef8842e991d2c!2sKhubal%20GCS!5e1!3m2!1sen!2sin!4v1750399701857!5m2!1sen!2sin" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </footer>
+
+            <footer class="footer">
+                <div class="footer-container">
+                    <div class="footer-section field-box">
+                        <h3>Field name</h3>
+                        <ul>
+                            <li><a href="#">Baramura GTPP</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Reach Us</h3>
+                        <p><strong>Location Office:</strong><br>Q7R9+43J, Hapania, Agartala, Tripura 799014<br>
+                        Tripura</p>
+                        <p><strong>Corporate Identity Number:</strong><br>
+                        L74899DL1993GOI054155</p>
+                        <p><strong>Telephone No:</strong> 011-26750998; <strong>Fax No:</strong> 011-26750991 / 26120991</p>
+                        <p><strong>For registering any grievances, please visit<br>ONGC Grievance portal:</strong><br>
+                        <a href="https://grievance.ongc.co.in" target="_blank">https://grievance.ongc.co.in</a></p>
+                    </div>
+
+                    <div class="footer-section map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3365.5759260632435!2d91.2650695749772!3d23.790340878643157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3753f57abca03475%3A0x1c8fcb068774bb96!2sONGC%201ST%20Gate!5e1!3m2!1sen!2sin!4v1750400394973!5m2!1sen!2sin" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </footer>
+
+            <footer class="footer">
+                <div class="footer-container">
+                    <div class="footer-section field-box">
+                        <h3>Field name</h3>
+                        <ul>
+                            <li><a href="#">Sundalbari</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Reach Us</h3>
+                        <p><strong>Location Office:</strong><br>Q7R9+43J, Hapania, Agartala, Tripura 799014</p>
+                        <p><strong>Corporate Identity Number:</strong><br>
+                        L74899DL1993GOI054155</p>
+                        <p><strong>Telephone No:</strong> 011-26750998; <strong>Fax No:</strong> 011-26750991 / 26120991</p>
+                        <p><strong>For registering any grievances, please visit<br>ONGC Grievance portal:</strong><br>
+                        <a href="https://grievance.ongc.co.in" target="_blank">https://grievance.ongc.co.in</a></p>
+                    </div>
+
+                    <div class="footer-section map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3365.5759260632435!2d91.2650695749772!3d23.790340878643157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3753f57abca03475%3A0x1c8fcb068774bb96!2sONGC%201ST%20Gate!5e1!3m2!1sen!2sin!4v1750400984964!5m2!1sen!2sin" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </footer>
+
+             <footer class="footer">
+                <div class="footer-container">
+                    <div class="footer-section field-box">
+                        <h3>Field name</h3>
+                        <ul>
+                            <li><a href="#">Tichna</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Reach Us</h3>
+                        <p><strong>Location Office:</strong><br>Q7R9+43J, Hapania, Agartala, Tripura 799014</p>
+                        <p><strong>Corporate Identity Number:</strong><br>
+                        L74899DL1993GOI054155</p>
+                        <p><strong>Telephone No:</strong> 011-26750998; <strong>Fax No:</strong> 011-26750991 / 26120991</p>
+                        <p><strong>For registering any grievances, please visit<br>ONGC Grievance portal:</strong><br>
+                        <a href="https://grievance.ongc.co.in" target="_blank">https://grievance.ongc.co.in</a></p>
+                    </div>
+
+                    <div class="footer-section map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3365.5759260632435!2d91.2650695749772!3d23.790340878643157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3753f57abca03475%3A0x1c8fcb068774bb96!2sONGC%201ST%20Gate!5e1!3m2!1sen!2sin!4v1750401663354!5m2!1sen!2sin" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </footer>
+
+            <footer class="footer">
+                <div class="footer-container">
+                    <div class="footer-section field-box">
+                        <h3>Field name</h3>
+                        <ul>
+                            <li><a href="#">Kunjaban Tripura</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Reach Us</h3>
+                        <p><strong>Location Office:</strong><br>
+                        Q7R9+MH7, Arundhauti Nagar, Agartala, Tripura 799014<br>
+                        Agartala Tripura</p>
+                        <p><strong>Corporate Identity Number:</strong><br>
+                        L74899DL1993GOI054155</p>
+                        <p><strong>Telephone No:</strong> 011-26750998; <strong>Fax No:</strong> 011-26750991 / 26120991</p>
+                        <p><strong>For registering any grievances, please visit<br>ONGC Grievance portal:</strong><br>
+                        <a href="https://grievance.ongc.co.in" target="_blank">https://grievance.ongc.co.in</a></p>
+                    </div>
+
+                    <div class="footer-section map">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d58412.26919122801!2d91.23440247910158!3d23.791316300000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3753f5cd06c3e571%3A0xe653c5fb2dfacc56!2sONGC%20Tripura%20Asset%20Office!5e0!3m2!1sen!2sin!4v1748979197980!5m2!1sen!2sin"
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Page Footer -->
+    <div class="page-footer">
+        <div class="container">
+            <p>ONGC Well Monitoring System &copy; 2025 | Map View</p>
+            <p>Last Updated: June 22, 2025</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const highlightMap = (mapSection) => {
+                if (!mapSection) return;
+                mapSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                mapSection.classList.add('highlight');
+                setTimeout(() => mapSection.classList.remove('highlight'), 1500);
+            };
+
+            // Handle field name clicks
+            document.querySelectorAll('.field-box ul li a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const footerContainer = link.closest('.footer-container');
+                    const mapSection = footerContainer?.querySelector('.map');
+                    highlightMap(mapSection);
+                });
+            });
+
+            // Handle hover on field box
+            document.querySelectorAll('.field-box').forEach(box => {
+                const mapSection = box.closest('.footer-container')?.querySelector('.map');
+                box.addEventListener('mouseenter', () => mapSection?.classList.add('highlight'));
+                box.addEventListener('mouseleave', () => mapSection?.classList.remove('highlight'));
+            });
+        });
+    </script>
+</body>
+</html>
