@@ -5,41 +5,66 @@ from functools import wraps
 import random
 from datetime import datetime, timedelta
 from flask import send_from_directory
+from flask_sqlalchemy import SQLAlchemy # Import SQLAlchemy
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'ongc_secret_key_2025'
 
-# User database
-USERS = {
-    "admin@ongc.co.in": {
-        "name": "Admin User",
-        "password": "securepassword",
-        "department": "IT",
-        "role": "admin"
-    },
-    "engineer@ongc.co.in": {
-        "name": "Field Engineer",
-        "password": "ongc1234",
-        "department": "Operations",
-        "role": "user"
-    }
-}
+# Configure Database Connection
+# Replace with your MySQL credentials
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/ongc_users_db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Disable tracking modifications for performance
+
+db = SQLAlchemy(app) # Initialize SQLAlchemy
+
+# Define your User model
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False) # Store hashed passwords
+    department = db.Column(db.String(100), nullable=False)
+    role = db.Column(db.String(50), default='user')
+
+    def __repr__(self):
+        return f'<User {self.email}>'
+
+# Create tables if they don't exist
+# You'll run this once initially, or when your model changes
+with app.app_context():
+    db.create_all()
+
+# User database (no longer needed, will use database)
+# USERS = {
+#     "admin@ongc.co.in": {
+#         "name": "Admin User",
+#         "password": "securepassword",
+#         "department": "IT",
+#         "role": "admin"
+#     },
+#     "engineer@ongc.co.in": {
+#         "name": "Field Engineer",
+#         "password": "ongc1234",
+#         "department": "Operations",
+#         "role": "user"
+#     }
+# }
 
 # Authentication decorator
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'user' not in session:
+        if 'user_email' not in session: # Changed from 'user' to 'user_email'
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
 
-# Generate random dates for operations
+# Generate random dates for operations (keep this)
 def generate_random_dates(count=5):
     base_date = datetime.now()
     return [f"{base_date - timedelta(days=random.randint(30, 180)):%Y-%m-%d}" for _ in range(count)]
 
-# Well details dictionary with all wells
+# Well details dictionary with all wells (keep this)
 WELL_DETAILS = {
     # Agartala Field
     "Agartala-A#1": {
@@ -919,9 +944,14 @@ def login():
         email = request.form['email']
         password = request.form['password']
         
-        user = USERS.get(email)
-        if user and user['password'] == password:
-            session['user'] = email
+        # Query the database for the user
+        user = User.query.filter_by(email=email).first()
+
+        # In a real application, you would hash and compare passwords securely
+        # For simplicity, we're comparing plain text for now.
+        # Install 'Werkzeug' and use 'generate_password_hash' and 'check_password_hash' for production.
+        if user and user.password == password: # Replace with check_password_hash(user.password, password)
+            session['user_email'] = user.email # Store email in session
             return redirect(url_for('dashboard'))
         else:
             return render_template('login.html', error="Invalid credentials")
@@ -942,22 +972,27 @@ def signup():
     if password != confirm:
         return render_template('login.html', signup_error="Passwords do not match")
     
-    if email in USERS:
+    # Check if user already exists in the database
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
         return render_template('login.html', signup_error="Email already registered")
     
-    # Add to database
-    USERS[email] = {
-        "name": name,
-        "password": password,
-        "department": department,
-        "role": "user"
-    }
-    session['user'] = email
+    # Create a new user instance
+    # In a real application, hash the password before storing:
+    # from werkzeug.security import generate_password_hash
+    # hashed_password = generate_password_hash(password)
+    new_user = User(name=name, email=email, password=password, department=department, role='user') # For now, direct password
+
+    # Add to the database session and commit
+    db.session.add(new_user)
+    db.session.commit()
+    
+    session['user_email'] = new_user.email
     return redirect(url_for('dashboard'))
 
 @app.route('/logout')
 def logout():
-    session.pop('user', None)
+    session.pop('user_email', None) # Changed from 'user' to 'user_email'
     return redirect(url_for('home'))
 
 # Home page
