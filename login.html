@@ -6,22 +6,29 @@
     <title>ONGC Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Define CSS variables for consistent theming */
         :root {
-            --primary:rgb(161, 13, 13);
-            --primary-dark:rgb(113, 0, 0);
+            --primary: rgb(161, 13, 13);
+            --primary-dark: rgb(113, 0, 0);
             --secondary: #ff6f00;
             --accent: #29b6f6;
+            --light-gray: #f0f4f8;
+            --dark-gray: #666;
+            --error: #f44336;
+            --success: #4CAF50;
         }
-        
+
+        /* Universal box-sizing for consistent layout */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        /* Body styling: full viewport height, centered content, background image with overlay */
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(rgba(10, 25, 48, 0.85), rgba(10, 25, 48, 0.85)), 
+            background: linear-gradient(rgba(10, 25, 48, 0.85), rgba(10, 25, 48, 0.85)),
             url('https://www.sarkaritel.com/wp-content/uploads/2025/06/ongc-logo.jpg');
             background-size: cover;
             background-position: center;
@@ -29,24 +36,44 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px; /* Add padding for small screens */
+            overflow: auto; /* Allow scrolling if content overflows */
         }
-        
+
+        /* Login container styling: white background, rounded corners, shadow */
         .login-container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98); /* Slightly less transparent */
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 450px;
+            max-width: 450px; /* Max width for larger screens */
             overflow: hidden;
+            animation: fadeInScale 0.5s ease-out forwards; /* Add animation */
         }
-        
+
+        /* Animation for the login container */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Header section of the login container */
         .login-header {
             background: var(--primary);
             padding: 30px;
             text-align: center;
             color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
         }
-        
+
+        /* Logo styling within the header */
         .logo {
             display: flex;
             justify-content: center;
@@ -54,42 +81,46 @@
             gap: 15px;
             margin-bottom: 15px;
         }
-        
+
         .logo-icon img {
-            height: 50px;
+            height: 50px; /* Fixed height for logo icon */
         }
-        
+
         .logo-text {
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
             font-size: 28px;
             letter-spacing: 0.5px;
         }
-        
+
         .logo-text span {
-            color: var(--secondary);
+            color: var(--secondary); /* Highlight part of the text */
         }
-        
+
         .login-header h2 {
             font-weight: 500;
             margin-top: 10px;
+            font-size: 1.5rem; /* Responsive font size */
         }
-        
+
+        /* Main body section of the login container */
         .login-body {
             padding: 30px;
         }
-        
+
+        /* Form group styling for spacing */
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
             color: var(--primary-dark);
+            font-size: 0.95rem; /* Slightly smaller label font */
         }
-        
+
         input {
             width: 100%;
             padding: 15px;
@@ -97,14 +128,16 @@
             border-radius: 8px;
             font-size: 16px;
             transition: all 0.3s;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.06); /* Subtle inner shadow */
         }
-        
+
         input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(41, 182, 246, 0.2);
+            box-shadow: 0 0 0 3px rgba(41, 182, 246, 0.2), inset 0 1px 3px rgba(0,0,0,0.06);
         }
-        
+
+        /* Button styling */
         .btn {
             width: 100%;
             padding: 15px;
@@ -117,80 +150,145 @@
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 10px;
+            display: flex; /* Use flex for icon and text alignment */
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        
+
         .btn:hover {
             background: var(--primary-dark);
+            transform: translateY(-2px); /* Slight lift effect */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
-        
-        .btn-secondary {
-            background: #6c757d;
-        }
-        
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-        
+
+        /* Footer section of the form */
         .form-footer {
             text-align: center;
             margin-top: 20px;
-            color: #666;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
         }
-        
+
         .form-footer a {
             color: var(--primary);
             text-decoration: none;
             font-weight: 500;
         }
-        
+
         .form-footer a:hover {
             text-decoration: underline;
         }
-        
+
+        /* Message styling (error/success) */
+        .error-message, .success-message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-message.active, .success-message.active {
+            display: flex; /* Always display as flex when active */
+        }
+
         .error-message {
-            color: #f44336;
-            padding: 10px;
+            color: var(--error);
             background: rgba(244, 67, 54, 0.1);
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: none;
+            border: 1px solid rgba(244, 67, 54, 0.2);
         }
-        
-        .error-message.active {
-            display: block;
-        }
-        
+
         .success-message {
-            color: #4CAF50;
-            padding: 10px;
+            color: var(--success);
             background: rgba(76, 175, 80, 0.1);
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: none;
+            border: 1px solid rgba(76, 175, 80, 0.2);
         }
-        
-        .success-message.active {
-            display: block;
-        }
-        
+
+        /* Tab navigation styling */
         .tabs {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 0; /* Remove bottom margin to connect with form */
+            border-bottom: 1px solid #ddd; /* Separator line */
         }
-        
+
         .tab {
             flex: 1;
             text-align: center;
             padding: 15px;
-            background: #f0f4f8;
+            background: var(--light-gray);
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 500;
+            color: var(--primary-dark);
+            border-top-left-radius: 15px; /* Rounded corners for tabs */
+            border-top-right-radius: 15px;
+            position: relative; /* For the active indicator */
         }
-        
+
         .tab.active {
-            background: var(--primary);
-            color: white;
+            background: white; /* Active tab is white to blend with form body */
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary); /* Active indicator */
+            z-index: 1; /* Bring active tab to front */
+            margin-bottom: -1px; /* Overlap with the border */
+        }
+
+        .tab:first-child {
+            border-top-right-radius: 0;
+        }
+
+        .tab:last-child {
+            border-top-left-radius: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+            .login-container {
+                margin: 0 15px; /* Add horizontal margin on very small screens */
+            }
+
+            .login-header {
+                padding: 20px; /* Reduce padding */
+            }
+
+            .logo-icon img {
+                height: 40px; /* Smaller logo on small screens */
+            }
+
+            .logo-text {
+                font-size: 24px; /* Smaller font for logo text */
+            }
+
+            .login-header h2 {
+                font-size: 1.3rem; /* Smaller header title */
+            }
+
+            .login-body {
+                padding: 20px; /* Reduce padding */
+            }
+
+            input {
+                padding: 12px; /* Smaller input padding */
+            }
+
+            .btn {
+                padding: 12px; /* Smaller button padding */
+                font-size: 15px;
+            }
+
+            .form-footer {
+                font-size: 0.85rem;
+            }
+
+            .error-message, .success-message {
+                padding: 10px;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -205,24 +303,24 @@
             </div>
             <h2>Oil and Natural Gas Corporation</h2>
         </div>
-        
+
         <div class="tabs">
             <div class="tab active" id="login-tab">Login</div>
             <div class="tab" id="signup-tab">Sign Up</div>
         </div>
-        
+
         {% if error %}
         <div class="error-message active">
             <i class="fas fa-exclamation-circle"></i> {{ error }}
         </div>
         {% endif %}
-        
+
         {% if signup_error %}
         <div class="error-message active">
             <i class="fas fa-exclamation-circle"></i> {{ signup_error }}
         </div>
         {% endif %}
-        
+
         <div class="login-body">
             <!-- Login Form -->
             <form id="login-form" method="POST" action="{{ url_for('login') }}">
@@ -230,53 +328,53 @@
                     <label for="login-email">Email Address</label>
                     <input type="email" id="login-email" name="email" placeholder="employee@ongc.co.in" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="login-password">Password</label>
                     <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
                 </div>
-                
+
                 <div class="form-group">
                     <button type="submit" class="btn">
                         <i class="fas fa-sign-in-alt"></i> Login to Dashboard
                     </button>
                 </div>
             </form>
-            
+
             <!-- Signup Form -->
             <form id="signup-form" method="POST" action="{{ url_for('signup') }}" style="display: none;">
                 <div class="form-group">
                     <label for="signup-name">Full Name</label>
                     <input type="text" id="signup-name" name="name" placeholder="Enter your full name" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="signup-email">Company Email</label>
                     <input type="email" id="signup-email" name="email" placeholder="employee@ongc.co.in" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="signup-department">Department</label>
                     <input type="text" id="signup-department" name="department" placeholder="Enter your department" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="signup-password">Password</label>
                     <input type="password" id="signup-password" name="password" placeholder="Create a password" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="signup-confirm">Confirm Password</label>
                     <input type="password" id="signup-confirm" name="confirm" placeholder="Confirm your password" required>
                 </div>
-                
+
                 <div class="form-group">
                     <button type="submit" class="btn">
                         <i class="fas fa-user-plus"></i> Create Account
                     </button>
                 </div>
             </form>
-            
+
             <div class="form-footer">
                 <p>For assistance, contact IT Support at <a href="mailto:support@ongc.co.in">support@ongc.co.in</a></p>
             </div>
@@ -289,7 +387,7 @@
             const signupTab = document.getElementById('signup-tab');
             const loginForm = document.getElementById('login-form');
             const signupForm = document.getElementById('signup-form');
-            
+
             // Show login/signup forms based on tab selection
             loginTab.addEventListener('click', function() {
                 loginTab.classList.add('active');
@@ -297,14 +395,14 @@
                 loginForm.style.display = 'block';
                 signupForm.style.display = 'none';
             });
-            
+
             signupTab.addEventListener('click', function() {
                 signupTab.classList.add('active');
                 loginTab.classList.remove('active');
                 signupForm.style.display = 'block';
                 loginForm.style.display = 'none';
             });
-            
+
             // Automatically switch to signup if there's a signup error
             {% if signup_error %}
             signupTab.click();
