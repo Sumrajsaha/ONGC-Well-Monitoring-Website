@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Define CSS variables for consistent theming */
         :root {
             --primary:rgb(161, 13, 13);
             --primary-dark:rgb(113, 0, 0);
@@ -26,21 +27,26 @@
             --sidebar-bg: #7d0d0d;
             --sidebar-hover: #640a0a;
         }
-        
+
+        /* Universal box-sizing for consistent layout */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        /* Body styling: font, background, min-height for full viewport, smooth transitions */
         body {
             font-family: 'Roboto', sans-serif;
             background: linear-gradient(135deg, #0a1930 0%,rgb(108, 26, 26) 100%);
-            color: #0a1930;
+            color: var(--text-dark); /* Default text color for light theme */
             line-height: 1.6;
             min-height: 100vh;
             transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
+
+        /* User info in header */
         .user-info {
             display: flex;
             align-items: center;
@@ -49,6 +55,8 @@
             padding: 8px 15px;
             border-radius: 20px;
             margin-left: 20px;
+            color: white; /* Ensure text is visible */
+            white-space: nowrap; /* Prevent wrapping */
         }
 
         .user-info i {
@@ -58,13 +66,14 @@
         .user-info span {
             font-weight: 500;
         }
-        
+
+        /* Container for content width limitation and centering */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 20px;
         }
-        
+
         /* Header Styles */
         header {
             background: rgba(161, 13, 13, 0.95);
@@ -75,64 +84,61 @@
             z-index: 100;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-        
+
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        
-        .logo-icon {
-            font-size: 28px;
-            color: var(--secondary-light);
+
+        .logo-icon img {
+            height: 45px;
+            width: auto;
+            min-width: 45px; /* Ensures logo is visible even if image fails */
+            object-fit: contain;
         }
-        
+
+        /* Fallback for logo if image doesn't load */
+        .logo-icon:before {
+            content: "ONGC";
+            display: none; /* Hidden by default */
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .logo-icon img[src=""]:not([src]) {
+            opacity: 0; /* Hide broken image icon */
+        }
+
+        .logo-icon img[src=""]:not([src]) + .logo-text {
+            margin-left: 0; /* Adjust spacing if fallback is shown */
+        }
+
         .logo-text {
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
             font-size: 24px;
             letter-spacing: 0.5px;
         }
-        
+
         .logo-text span {
             color: var(--secondary-light);
         }
-        /* Add to your CSS */
-        .logo-icon img {
-            height: 45px;
-            width: auto;
-            min-width: 120px; /* Prevents collapse if image missing */
-            object-fit: contain;
-        }
 
-        /* Fallback if image doesn't load */
-        .logo-icon:before {
-            content: "ONGC";
-            display: none;
-            color: white;
-            font-weight: bold;
-        }
-
-        .logo-icon img[src=""]:not([src]) {
-            opacity: 0;
-        }
-
-        .logo-icon img[src=""]:not([src]) + .logo-text {
-            margin-left: 0;
-        }
         /* Navigation */
         nav ul {
             display: flex;
             list-style: none;
             gap: 25px;
         }
-        
+
         nav a {
             color: white;
             text-decoration: none;
@@ -144,37 +150,54 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap; /* Prevent text wrapping */
         }
-        
+
         nav a:hover, nav a.active {
             background: rgba(255, 255, 255, 0.15);
             color: var(--secondary-light);
         }
-        
+
         nav i {
             font-size: 18px;
         }
-        
+
         /* Settings Layout */
         .settings-container {
             display: flex;
             gap: 30px;
             padding: 30px 0;
         }
-        
+
         .settings-sidebar {
-            flex: 0 0 250px;
+            flex: 0 0 250px; /* Fixed width sidebar */
             background: var(--sidebar-bg);
             border-radius: 10px;
             padding: 20px 0;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            height: fit-content;
+            height: fit-content; /* Adjust height to content */
+            position: sticky; /* Keep sidebar visible on scroll */
+            top: 80px; /* Offset from header */
         }
-        
+
         .settings-content {
-            flex: 1;
+            flex: 1; /* Take remaining space */
         }
-        
+
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 50px;
+            margin: 0 auto 20px;
+            border: 3px solid var(--secondary-light);
+        }
+
         .sidebar-item {
             padding: 15px 25px;
             color: white;
@@ -187,26 +210,26 @@
             border-left: 4px solid transparent;
             cursor: pointer;
         }
-        
+
         .sidebar-item:hover, .sidebar-item.active {
             background: var(--sidebar-hover);
             border-left: 4px solid var(--secondary);
         }
-        
+
         .sidebar-item i {
             width: 24px;
             text-align: center;
         }
-        
+
         .settings-card {
             background: var(--card-bg);
             border-radius: 10px;
             padding: 30px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             margin-bottom: 30px;
-            min-height: 500px;
+            min-height: 500px; /* Ensure content area is sufficiently tall */
         }
-        
+
         .settings-title {
             font-family: 'Montserrat', sans-serif;
             font-size: 24px;
@@ -215,16 +238,16 @@
             border-bottom: 1px solid var(--border);
             color: var(--primary-dark);
         }
-        
+
         .settings-section {
             margin-bottom: 30px;
-            display: none;
+            display: none; /* Hidden by default */
         }
-        
+
         .settings-section.active {
-            display: block;
+            display: block; /* Show when active */
         }
-        
+
         .section-title {
             font-size: 18px;
             font-weight: 600;
@@ -234,25 +257,25 @@
             align-items: center;
             gap: 10px;
         }
-        
+
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted minmax for better fit */
             gap: 25px;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
             position: relative;
         }
-        
+
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
             color: var(--text-dark);
         }
-        
+
         input, select, textarea {
             width: 100%;
             padding: 12px 15px;
@@ -262,37 +285,39 @@
             font-size: 16px;
             transition: all 0.3s ease;
         }
-        
+
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(41, 182, 246, 0.2);
         }
-        
+
         .checkbox-group {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 15px;
         }
-        
-        .checkbox-group input {
-            width: auto;
+
+        .checkbox-group input[type="radio"],
+        .checkbox-group input[type="checkbox"] {
+            width: auto; /* Allow checkboxes/radios to take natural width */
+            margin-right: 5px;
         }
-        
+
         .switch {
             position: relative;
             display: inline-block;
             width: 50px;
             height: 24px;
         }
-        
+
         .switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-        
+
         .slider {
             position: absolute;
             cursor: pointer;
@@ -304,7 +329,7 @@
             transition: .4s;
             border-radius: 24px;
         }
-        
+
         .slider:before {
             position: absolute;
             content: "";
@@ -316,17 +341,20 @@
             transition: .4s;
             border-radius: 50%;
         }
-        
+
         input:checked + .slider {
             background-color: var(--success);
         }
-        
+
         input:checked + .slider:before {
             transform: translateX(26px);
         }
-        
+
         .btn {
-            display: inline-block;
+            display: inline-flex; /* Use flex for icon and text */
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Space between icon and text */
             padding: 12px 25px;
             background: var(--primary);
             color: white;
@@ -337,36 +365,38 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-decoration: none; /* For link-like buttons */
         }
-        
+
         .btn:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         .btn-secondary {
             background: #6c757d;
         }
-        
+
         .btn-secondary:hover {
             background: #5a6268;
         }
-        
+
         .btn-success {
             background: var(--success);
         }
-        
+
         .btn-success:hover {
             background: #3d8b40;
         }
-        
+
         .btn-group {
             display: flex;
             gap: 15px;
             margin-top: 20px;
+            flex-wrap: wrap; /* Allow buttons to wrap */
         }
-        
+
         .alert {
             padding: 15px;
             border-radius: 6px;
@@ -374,20 +404,21 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            display: none; /* Hidden by default */
         }
-        
+
         .alert-success {
             background: rgba(76, 175, 80, 0.15);
             border: 1px solid rgba(76, 175, 80, 0.2);
             color: var(--success);
         }
-        
+
         .alert-danger {
             background: rgba(244, 67, 54, 0.15);
             border: 1px solid rgba(244, 67, 54, 0.2);
             color: var(--danger);
         }
-        
+
         /* Footer */
         footer {
             text-align: center;
@@ -396,186 +427,259 @@
             font-size: 14px;
             margin-top: 40px;
         }
-        
+
         /* Responsive Design */
         @media (max-width: 900px) {
             .settings-container {
-                flex-direction: column;
+                flex-direction: column; /* Stack sidebar and content */
             }
-            
+
             .settings-sidebar {
-                flex: 0 0 auto;
+                flex: 0 0 auto; /* Remove fixed width when stacked */
+                width: 100%; /* Take full width */
+                position: static; /* Remove sticky behavior */
+                margin-bottom: 30px;
+                padding: 0; /* Remove padding for better mobile layout */
+            }
+
+            .settings-sidebar h3 {
+                padding: 20px; /* Add padding back to h3 */
+            }
+
+            .sidebar-item {
+                border-left: none; /* Remove left border */
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Add bottom border for separation */
+                padding: 18px 25px; /* Adjust padding */
+                justify-content: center; /* Center items in sidebar */
+            }
+            .sidebar-item:last-child {
+                border-bottom: none;
+            }
+            .sidebar-item.active {
+                border-left: none; /* Remove left border for active state */
+                background: var(--sidebar-hover);
+            }
+            .user-avatar {
+                margin-top: 20px;
             }
         }
-        
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
                 gap: 15px;
             }
-            
+
             nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
+                display: none; /* Hide desktop navigation */
+            }
+            .menu-toggle {
+                display: block; /* Show hamburger menu */
+            }
+            .user-info {
+                margin-left: 0; /* Remove left margin */
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr; /* Single column for forms */
+            }
+            .btn-group {
+                flex-direction: column; /* Stack buttons vertically */
+                gap: 10px;
+            }
+            .settings-card {
+                padding: 20px; /* Smaller padding for cards */
+            }
+            .settings-title {
+                font-size: 20px;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+            }
+            .section-title {
+                font-size: 16px;
+                margin-bottom: 15px;
+            }
+            label {
+                font-size: 14px;
+            }
+            input, select, textarea {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            .alert {
+                padding: 12px;
+                font-size: 14px;
+            }
+            .settings-grid {
+                grid-template-columns: 1fr; /* Single column for data management cards */
+            }
+            .about-card h3 {
+                font-size: 1.2rem;
+            }
+            .about-card p {
+                font-size: 0.95rem;
+            }
+            .mission-vision {
+                grid-template-columns: 1fr; /* Stack mission/vision cards */
+            }
+            .team-grid {
+                grid-template-columns: 1fr; /* Single column for team members */
+            }
+            .stat-number {
+                font-size: 30px;
+            }
+            .stat-label {
+                font-size: 14px;
+            }
+            .theme-option, .density-option {
+                padding: 10px;
             }
         }
-        
-        .user-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            .logo-text {
+                font-size: 20px;
+            }
+            .logo-icon img {
+                height: 35px;
+            }
+            .user-info {
+                font-size: 14px;
+                padding: 6px 10px;
+            }
+            .user-info i {
+                font-size: 16px;
+            }
+            .settings-card {
+                padding: 15px;
+            }
+            .settings-title {
+                font-size: 18px;
+            }
+            .section-title {
+                font-size: 15px;
+            }
+            .btn {
+                font-size: 13px;
+                padding: 8px 15px;
+            }
+            .alert {
+                font-size: 13px;
+            }
+            .file-upload-button {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            .file-name {
+                font-size: 12px;
+            }
+        }
+
+        /* Mobile navigation toggle (hamburger menu) */
+        .menu-toggle {
+            display: none; /* Hidden by default on larger screens */
+            background: none;
+            border: none;
             color: white;
-            font-size: 50px;
-            margin: 0 auto 20px;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 5px;
         }
-        
-        .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .settings-card-item {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-        }
-        
-        .settings-card-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .settings-card-title {
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--primary-dark);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .status-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-        
-        .status-active { background-color: var(--success); }
-        .status-warning { background-color: var(--warning); }
-        .status-inactive { background-color: var(--danger); }
-        
-        .progress-bar {
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: var(--primary);
-        }
-        
-        .security-level {
-            display: flex;
-            justify-content: space-between;
-            margin: 15px 0;
-        }
-        
-        .security-meter {
-            display: flex;
-            gap: 5px;
-            margin: 10px 0;
-        }
-        
-        .security-segment {
-            height: 8px;
-            flex: 1;
-            background: #e0e0e0;
-            border-radius: 2px;
-        }
-        
-        .security-segment.active {
-            background: var(--success);
-        }
-        
-        .error-message {
-            color: var(--danger);
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
-        }
-        
-        .file-upload-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-            margin: 15px 0;
-        }
-        
-        .file-upload-wrapper input[type=file] {
-            position: absolute;
-            left: 0;
+
+        /* Mobile navigation overlay */
+        .mobile-nav-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
             top: 0;
-            opacity: 0;
-            cursor: pointer;
-            height: 100%;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 101; /* Above header */
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
         }
-        
-        .file-upload-button {
-            background: var(--primary);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 6px;
+
+        .mobile-nav-overlay.active {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav-overlay ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
             text-align: center;
-            cursor: pointer;
+        }
+
+        .mobile-nav-overlay a {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            padding: 10px 0;
             display: block;
+            transition: color 0.3s ease;
         }
-        
-        .file-upload-button:hover {
-            background: var(--primary-dark);
+
+        .mobile-nav-overlay a:hover {
+            color: var(--secondary-light);
         }
-        
-        .file-name {
-            margin-top: 8px;
-            font-size: 14px;
-            color: var(--text-light);
+
+        .mobile-nav-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
         }
-        
+
+        /* Show hamburger menu on smaller screens */
+        @media (max-width: 768px) {
+            nav.desktop-nav { /* Hide desktop nav */
+                display: none;
+            }
+            .menu-toggle {
+                display: block; /* Show hamburger menu */
+            }
+        }
+
         /* Dark theme */
         body.dark-theme {
             background: #121f35;
             color: #f0f0f0;
         }
-        
+
         body.dark-theme .settings-card {
             background: #1a2b47;
             color: #f0f0f0;
         }
-        
-        body.dark-theme .section-title,
+
         body.dark-theme .settings-title,
+        body.dark-theme .section-title,
         body.dark-theme .settings-card-title {
             color: #ffffff;
         }
-        
+
         body.dark-theme label {
             color: #e0e0e0;
         }
-        
+
         body.dark-theme input,
         body.dark-theme select,
         body.dark-theme textarea {
@@ -583,64 +687,79 @@
             color: #f0f0f0;
             border-color: #334b73;
         }
-        
+
         body.dark-theme .settings-card-item {
             background: #1a2b47;
             color: #f0f0f0;
         }
-        
+
         body.dark-theme .progress-bar {
             background: #253554;
         }
-        
+
         body.dark-theme footer {
             color: rgba(255, 255, 255, 0.6);
         }
-        
+        body.dark-theme .alert-success {
+            background: rgba(76, 175, 80, 0.25);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: var(--success);
+        }
+
+        body.dark-theme .alert-danger {
+            background: rgba(244, 67, 54, 0.25);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: var(--danger);
+        }
+
         /* Compact view */
-        .compact-view .form-group {
+        body.compact-view .form-group {
             margin-bottom: 12px;
         }
-        
-        .compact-view .settings-card {
+
+        body.compact-view .settings-card {
             padding: 20px;
         }
-        
-        .compact-view .section-title {
+
+        body.compact-view .section-title {
             margin-bottom: 15px;
         }
-        
+
         /* Spacious layout */
-        .spacious-layout .settings-card {
+        body.spacious-layout .settings-card {
             padding: 40px;
         }
-        
-        .spacious-layout .form-grid {
+
+        body.spacious-layout .form-grid {
             gap: 30px;
         }
-        
-        .spacious-layout .section-title {
+
+        body.spacious-layout .section-title {
             margin-bottom: 25px;
         }
-        
-        .spacious-layout .btn-group {
+
+        body.spacious-layout .btn-group {
             margin-top: 30px;
         }
-        
-        /* About Us Section */
+
+        /* About Us Section specific styling */
         .about-content {
             display: flex;
             flex-direction: column;
             gap: 30px;
         }
-        
+
         .about-card {
             background: white;
             border-radius: 10px;
             padding: 25px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
-        
+        body.dark-theme .about-card {
+            background: #1a2b47;
+            color: #f0f0f0;
+        }
+
         .about-card h3 {
             color: var(--primary);
             margin-bottom: 15px;
@@ -648,25 +767,32 @@
             align-items: center;
             gap: 10px;
         }
-        
+        body.dark-theme .about-card h3 {
+            color: white;
+        }
+
         .about-card p {
             line-height: 1.8;
             margin-bottom: 15px;
+            color: var(--text-dark);
         }
-        
+        body.dark-theme .about-card p {
+            color: #e0e0e0;
+        }
+
         .mission-vision {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
-        
+
         .team-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
             margin-top: 20px;
         }
-        
+
         .team-member {
             text-align: center;
             padding: 20px;
@@ -675,12 +801,16 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
         }
-        
+        body.dark-theme .team-member {
+            background: #253554;
+            color: #f0f0f0;
+        }
+
         .team-member:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        
+
         .member-avatar {
             width: 100px;
             height: 100px;
@@ -693,38 +823,48 @@
             font-size: 35px;
             margin: 0 auto 15px;
         }
-        
+
         .member-name {
             font-weight: 600;
             margin-bottom: 5px;
             color: var(--primary-dark);
         }
-        
+        body.dark-theme .member-name {
+            color: white;
+        }
+
         .member-role {
             color: var(--text-light);
             margin-bottom: 10px;
         }
-        
+        body.dark-theme .member-role {
+            color: #ccc;
+        }
+
         .contact-info {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-top: 15px;
         }
-        
+
         .contact-item {
             display: flex;
             align-items: center;
             gap: 10px;
+            color: var(--text-dark);
         }
-        
+        body.dark-theme .contact-item {
+            color: #e0e0e0;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
             margin-top: 20px;
         }
-        
+
         .stat-card {
             text-align: center;
             padding: 20px;
@@ -732,26 +872,33 @@
             border-radius: 10px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
-        
+        body.dark-theme .stat-card {
+            background: #1a2b47;
+            color: #f0f0f0;
+        }
+
         .stat-number {
             font-size: 36px;
             font-weight: 700;
             color: var(--primary);
             margin-bottom: 10px;
         }
-        
+
         .stat-label {
             color: var(--text-light);
             font-size: 16px;
         }
-        
+        body.dark-theme .stat-label {
+            color: #ccc;
+        }
+
         /* Theme preview */
         .theme-preview {
             display: flex;
             gap: 15px;
             margin-top: 10px;
         }
-        
+
         .theme-option {
             flex: 1;
             padding: 15px;
@@ -759,34 +906,36 @@
             cursor: pointer;
             transition: all 0.3s;
             border: 2px solid transparent;
+            text-align: center;
+            font-weight: 500;
         }
-        
+
         .theme-option:hover {
             transform: translateY(-3px);
         }
-        
+
         .theme-option.active {
             border-color: var(--primary);
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        
+
         .theme-light {
             background: #f5f5f5;
             color: #333;
         }
-        
+
         .theme-dark {
             background: #1a1a1a;
             color: #f5f5f5;
         }
-        
+
         .theme-system {
             background: linear-gradient(to right, #f5f5f5 50%, #1a1a1a 50%);
             color: #333;
             position: relative;
             overflow: hidden;
         }
-        
+
         .theme-system::after {
             content: '';
             position: absolute;
@@ -795,15 +944,24 @@
             right: 0;
             width: 50%;
             background: #1a1a1a;
+            z-index: 1;
         }
-        
+        .theme-system strong {
+            position: relative;
+            z-index: 2;
+        }
+        .theme-system div {
+            position: relative;
+            z-index: 2;
+        }
+
         /* Density preview */
         .density-preview {
             display: flex;
             gap: 15px;
             margin-top: 10px;
         }
-        
+
         .density-option {
             flex: 1;
             padding: 15px;
@@ -815,28 +973,40 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            text-align: center;
+            font-weight: 500;
+            color: var(--text-dark);
         }
-        
+        body.dark-theme .density-option {
+            background: #253554;
+            color: #f0f0f0;
+        }
+
         .density-option:hover {
             transform: translateY(-3px);
         }
-        
+
         .density-option.active {
             border-color: var(--primary);
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        
+
         .density-bar {
             height: 8px;
             background: var(--primary);
             border-radius: 4px;
         }
-        
+
         .density-compact .density-bar {
             height: 6px;
             margin-bottom: 5px;
         }
-        
+
+        .density-normal .density-bar {
+            height: 8px;
+            margin-bottom: 10px;
+        }
+
         .density-spacious .density-bar {
             height: 10px;
             margin-bottom: 15px;
@@ -850,32 +1020,50 @@
             <div class="header-content">
                 <div class="logo">
                     <div class="logo-icon">
-                         <img src="https://www.ongcindia.com/documents/77751/2132071/ongcLogo.jpg" 
+                         <img src="https://www.ongcindia.com/documents/77751/2132071/ongcLogo.jpg"
                          alt="ONGC Logo"
                          onerror="this.style.opacity='0'; this.nextElementSibling.style.display='block'">
                     <div style="display: none; color: white; font-weight: 700; font-size: 18px;">ONGC</div>
                     </div>
                     <div class="logo-text">Settings</div>
                 </div>
-                <nav>
+                <!-- Desktop Navigation -->
+                <nav class="desktop-nav">
                     <ul>
                         <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
                         <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                         <li><a href="/analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
-                        <li><a href="#"><i class="fas fa-map-marked-alt"></i>Map View</a></li>
+                        <li><a href="/map_view"><i class="fas fa-map-marked-alt"></i> Map View</a></li>
                         <li><a href="/settings" class="active"><i class="fas fa-cog"></i> Settings</a></li>
                     </ul>
                 </nav>
                 <div class="user-info">
                     <i class="fas fa-user-circle"></i>
-                    <span>{{ session.user }}</span>
+                    <span>{{ session_user }}</span> {# Display dynamic user name #}
                     <a href="/logout" style="margin-left: 10px; color: white;">
                         <i class="fas fa-sign-out-alt"></i>
                     </a>
                 </div>
+                <!-- Mobile Navigation Toggle -->
+                <button class="menu-toggle" id="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay">
+        <button class="mobile-nav-close" id="mobile-nav-close">&times;</button>
+        <ul>
+            <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="/analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+            <li><a href="/map_view"><i class="fas fa-map-marked-alt"></i> Map View</a></li>
+            <li><a href="/settings" class="active"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
 
     <!-- Main Settings Content -->
     <div class="container">
@@ -885,8 +1073,8 @@
                 <div class="user-avatar">
                     <i class="fas fa-user"></i>
                 </div>
-                <h3 style="text-align: center; color: white; margin-bottom: 25px;">Admin User</h3>
-                
+                <h3 style="text-align: center; color: white; margin-bottom: 25px;" id="sidebar-user-name">{{ user_data.fullname }}</h3> {# Display dynamic full name #}
+
                 <div class="sidebar-item active" data-section="profile">
                     <i class="fas fa-user-cog"></i> Profile Settings
                 </div>
@@ -900,54 +1088,48 @@
                     <i class="fas fa-info-circle"></i> About Us
                 </div>
             </div>
-            
+
             <!-- Settings Content -->
             <div class="settings-content">
                 <div class="settings-card">
                     <h2 class="settings-title" id="settings-title">Profile Settings</h2>
-                    
-                    <div id="alert-message" class="alert alert-success" style="display: none;">
+
+                    <div id="alert-message" class="alert alert-success">
                         <i class="fas fa-check-circle"></i>
                         <span id="alert-text">Your settings have been saved successfully!</span>
                     </div>
-                    
+
                     <!-- Profile Settings Section -->
                     <div class="settings-section active" id="profile-section">
                         <h3 class="section-title">
                             <i class="fas fa-user-cog"></i> Profile Settings
                         </h3>
-                        
+
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="username">Username</label>
-                                <input type="text" id="username" value="admin_user" placeholder="Enter your username">
-                                <div class="error-message" id="username-error">Username must be at least 3 characters</div>
-                            </div>
-                            
-                            <div class="form-group">
                                 <label for="email">Email Address</label>
-                                <input type="email" id="email" value="admin@ongc.com" placeholder="Enter your email">
+                                <input type="email" id="email" value="{{ user_data.email }}" placeholder="Enter your email" readonly> {# Email is read-only #}
                                 <div class="error-message" id="email-error">Please enter a valid email address</div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="fullname">Full Name</label>
-                                <input type="text" id="fullname" value="ONGC Administrator" placeholder="Enter your full name">
+                                <input type="text" id="fullname" value="{{ user_data.fullname }}" placeholder="Enter your full name">
                                 <div class="error-message" id="fullname-error">Full name is required</div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="department">Department</label>
                                 <select id="department">
-                                    <option>Operations</option>
-                                    <option selected>Engineering</option>
-                                    <option>Management</option>
-                                    <option>Field Services</option>
-                                    <option>IT Support</option>
+                                    <option value="Operations" {% if user_data.department == 'Operations' %}selected{% endif %}>Operations</option>
+                                    <option value="Engineering" {% if user_data.department == 'Engineering' %}selected{% endif %}>Engineering</option>
+                                    <option value="Management" {% if user_data.department == 'Management' %}selected{% endif %}>Management</option>
+                                    <option value="Field Services" {% if user_data.department == 'Field Services' %}selected{% endif %}>Field Services</option>
+                                    <option value="IT Support" {% if user_data.department == 'IT Support' %}selected{% endif %}>IT Support</option>
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="btn-group">
                             <button class="btn btn-success" onclick="saveProfileSettings()">
                                 <i class="fas fa-save"></i> Update Profile
@@ -957,13 +1139,13 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- Dashboard Preferences Section -->
                     <div class="settings-section" id="preferences-section">
                         <h3 class="section-title">
                             <i class="fas fa-sliders-h"></i> Dashboard Preferences
                         </h3>
-                        
+
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Theme Preferences</label>
@@ -979,7 +1161,7 @@
                                     <input type="radio" id="theme-system" name="theme" value="system">
                                     <label for="theme-system">System Default</label>
                                 </div>
-                                
+
                                 <!-- Theme preview -->
                                 <div class="theme-preview">
                                     <div class="theme-option theme-light active" data-theme="light">
@@ -998,7 +1180,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label>Dashboard Density</label>
                                 <div class="checkbox-group">
@@ -1013,7 +1195,7 @@
                                     <input type="radio" id="density-spacious" name="density" value="spacious">
                                     <label for="density-spacious">Spacious Layout</label>
                                 </div>
-                                
+
                                 <!-- Density preview -->
                                 <div class="density-preview">
                                     <div class="density-option density-compact" data-density="compact">
@@ -1036,31 +1218,31 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
-                                <label>Table Rows Per Page</label>
+                                <label for="rows-per-page">Table Rows Per Page</label>
                                 <select id="rows-per-page">
-                                    <option>10</option>
-                                    <option selected>25</option>
-                                    <option>50</option>
-                                    <option>100</option>
-                                    <option>Show All</option>
+                                    <option value="10">10</option>
+                                    <option value="25" selected>25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="all">Show All</option>
                                 </select>
                             </div>
-                            
+
                             <div class="form-group">
-                                <label>Default Date Range</label>
+                                <label for="date-range">Default Date Range</label>
                                 <select id="date-range">
-                                    <option>Today</option>
-                                    <option selected>Last 7 Days</option>
-                                    <option>Last 30 Days</option>
-                                    <option>This Month</option>
-                                    <option>Last Month</option>
-                                    <option>Custom Range</option>
+                                    <option value="today">Today</option>
+                                    <option value="last7days" selected>Last 7 Days</option>
+                                    <option value="last30days">Last 30 Days</option>
+                                    <option value="thismonth">This Month</option>
+                                    <option value="lastmonth">Last Month</option>
+                                    <option value="custom">Custom Range</option>
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="btn-group">
                             <button class="btn btn-success" onclick="savePreferences()">
                                 <i class="fas fa-save"></i> Save Preferences
@@ -1070,13 +1252,13 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- Data Management Section -->
                     <div class="settings-section" id="data-section">
                         <h3 class="section-title">
                             <i class="fas fa-database"></i> Data Management
                         </h3>
-                        
+
                         <div class="settings-grid">
                             <div class="settings-card-item">
                                 <h4 class="settings-card-title"><i class="fas fa-file-export"></i> Data Export</h4>
@@ -1098,7 +1280,7 @@
                                 </button>
                                 <div id="export-status" style="margin-top: 10px; font-size: 14px;"></div>
                             </div>
-                            
+
                             <div class="settings-card-item">
                                 <h4 class="settings-card-title"><i class="fas fa-file-import"></i> Data Import</h4>
                                 <p>Import well data from CSV or Excel files</p>
@@ -1114,12 +1296,12 @@
                                 </button>
                                 <div id="import-status" style="margin-top: 10px; font-size: 14px;"></div>
                             </div>
-                            
+
                             <div class="settings-card-item">
                                 <h4 class="settings-card-title"><i class="fas fa-history"></i> Data History</h4>
                                 <p>Manage historical data storage and retention</p>
                                 <div style="margin: 15px 0;">
-                                    <label>Data Retention Period</label>
+                                    <label for="data-retention">Data Retention Period</label>
                                     <select id="data-retention" onchange="updateRetention()">
                                         <option value="7">7 days</option>
                                         <option value="30">30 days</option>
@@ -1135,12 +1317,12 @@
                                     <span id="storage-text">65% storage used</span>
                                 </div>
                             </div>
-                            
+
                             <div class="settings-card-item">
                                 <h4 class="settings-card-title"><i class="fas fa-sync-alt"></i> Data Refresh</h4>
                                 <p>Configure how often data is updated</p>
                                 <div style="margin: 15px 0;">
-                                    <label>Refresh Interval</label>
+                                    <label for="refresh-interval">Refresh Interval</label>
                                     <select id="refresh-interval" onchange="saveRefreshInterval()">
                                         <option value="1">1 minute</option>
                                         <option value="5">5 minutes</option>
@@ -1160,32 +1342,32 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- About Us Section -->
                     <div class="settings-section" id="about-section">
                         <h3 class="section-title">
                             <i class="fas fa-info-circle"></i> About ONGC Well Dashboard
                         </h3>
-                        
+
                         <div class="about-content">
                             <div class="about-card">
                                 <h3><i class="fas fa-bullseye"></i> Our Mission</h3>
                                 <p>To provide the Oil and Natural Gas Corporation with the most advanced, reliable, and intuitive well monitoring platform that enhances operational efficiency, improves decision-making, and ensures the highest standards of safety and environmental compliance.</p>
                             </div>
-                            
+
                             <div class="mission-vision">
                                 <div class="about-card">
                                     <h3><i class="fas fa-rocket"></i> Vision</h3>
                                     <p>To become the industry standard for oil and gas well monitoring systems worldwide, setting benchmarks in technological innovation, user experience, and data intelligence for the energy sector.</p>
                                 </div>
-                                
+
                                 <div class="about-card">
                                     <h3><i class="fas fa-chart-line"></i> Capabilities</h3>
                                     <p>Our platform integrates real-time monitoring, predictive analytics, and comprehensive reporting to deliver actionable insights for well operations, maintenance planning, and production optimization.</p>
                                 </div>
                             </div>
-                            
-                            
+
+
                             <div class="about-card">
                                 <h3><i class="fas fa-building"></i> Company Information</h3>
                                 <div class="contact-info">
@@ -1206,7 +1388,7 @@
                                         <span>www.ongcindia.com</span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="stats-grid">
                                     <div class="stat-card">
                                         <div class="stat-number">150+</div>
@@ -1242,18 +1424,21 @@
     </footer>
 
     <script>
+        // Global variable to store initial user data for reset
+        let initialUserData = {};
+
         // Initialize the settings page
         document.addEventListener('DOMContentLoaded', function() {
-            // Load saved settings
-            loadProfileSettings();
+            // Load saved settings (now from Flask context)
+            loadProfileSettings(); // This will now use the data passed from Flask
             loadPreferences();
-            
+
             // Set up file upload display
             document.getElementById('data-import').addEventListener('change', function(e) {
                 const fileName = e.target.files.length ? e.target.files[0].name : 'No file selected';
                 document.getElementById('selected-file').textContent = fileName;
             });
-            
+
             // Add event listeners to sidebar items
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.addEventListener('click', function() {
@@ -1261,10 +1446,10 @@
                     switchSection(`${section}-section`);
                 });
             });
-            
+
             // Set initial last refresh time
             document.getElementById('last-refresh').textContent = new Date().toLocaleTimeString();
-            
+
             // Add theme change listeners
             document.querySelectorAll('input[name="theme"]').forEach(radio => {
                 radio.addEventListener('change', function() {
@@ -1272,17 +1457,17 @@
                     updateThemePreview(this.value);
                 });
             });
-            
+
             // Add theme preview click listeners
             document.querySelectorAll('.theme-option').forEach(option => {
                 option.addEventListener('click', function() {
                     const theme = this.getAttribute('data-theme');
-                    document.querySelector(`#theme-${theme}`).checked = true;
+                    document.querySelector(`input[name="theme"][value="${theme}"]`).checked = true;
                     applyTheme(theme);
                     updateThemePreview(theme);
                 });
             });
-            
+
             // Add density change listeners
             document.querySelectorAll('input[name="density"]').forEach(radio => {
                 radio.addEventListener('change', function() {
@@ -1290,32 +1475,51 @@
                     updateDensityPreview(this.value);
                 });
             });
-            
+
             // Add density preview click listeners
             document.querySelectorAll('.density-option').forEach(option => {
                 option.addEventListener('click', function() {
                     const density = this.getAttribute('data-density');
-                    document.querySelector(`#density-${density}`).checked = true;
+                    document.querySelector(`input[name="density"][value="${density}"]`).checked = true;
                     applyDensity(density);
                     updateDensityPreview(density);
                 });
             });
-            
+
             // Apply current theme preview on load
             updateThemePreview(document.querySelector('input[name="theme"]:checked').value);
             updateDensityPreview(document.querySelector('input[name="density"]:checked').value);
+
+            // Mobile menu toggle functionality
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+            const mobileNavClose = document.getElementById('mobile-nav-close');
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    mobileNavOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                });
+            }
+
+            if (mobileNavClose) {
+                mobileNavClose.addEventListener('click', function() {
+                    mobileNavOverlay.classList.remove('active');
+                    document.body.style.overflow = ''; // Restore scrolling
+                });
+            }
         });
-        
+
         // Function to switch between settings sections
         function switchSection(sectionId) {
             // Hide all sections
             document.querySelectorAll('.settings-section').forEach(section => {
                 section.classList.remove('active');
             });
-            
+
             // Show selected section
             document.getElementById(sectionId).classList.add('active');
-            
+
             // Update title
             const titleMap = {
                 'profile-section': 'Profile Settings',
@@ -1323,130 +1527,156 @@
                 'data-section': 'Data Management',
                 'about-section': 'About Us'
             };
-            
+
             document.getElementById('settings-title').textContent = titleMap[sectionId];
-            
+
             // Update active sidebar item
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.classList.remove('active');
             });
-            
+
             // Activate the clicked sidebar item
             document.querySelector(`.sidebar-item[data-section="${sectionId.split('-')[0]}"]`).classList.add('active');
         }
-        
+
         // Profile Settings Functions
         function loadProfileSettings() {
-            const savedProfile = JSON.parse(localStorage.getItem('profileSettings')) || {};
-            
-            if (savedProfile.username) {
-                document.getElementById('username').value = savedProfile.username;
+            // Get data passed from Flask
+            // This assumes user_data is available in the Jinja2 context
+            const userData = JSON.parse('{{ user_data | tojson | safe }}');
+
+            // Store initial data for reset
+            initialUserData = { ...userData };
+
+            document.getElementById('email').value = userData.email || '';
+            document.getElementById('fullname').value = userData.fullname || '';
+
+            // Set selected option for department
+            const departmentSelect = document.getElementById('department');
+            if (userData.department) {
+                for (let i = 0; i < departmentSelect.options.length; i++) {
+                    if (departmentSelect.options[i].value === userData.department) {
+                        departmentSelect.options[i].selected = true;
+                        break;
+                    }
+                }
             }
-            if (savedProfile.email) {
-                document.getElementById('email').value = savedProfile.email;
-            }
-            if (savedProfile.fullname) {
-                document.getElementById('fullname').value = savedProfile.fullname;
-            }
-            if (savedProfile.department) {
-                document.getElementById('department').value = savedProfile.department;
-            }
+
+            // Update sidebar user name
+            document.getElementById('sidebar-user-name').textContent = userData.fullname || 'User';
         }
-        
-        function saveProfileSettings() {
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
+
+        async function saveProfileSettings() {
             const fullname = document.getElementById('fullname').value;
             const department = document.getElementById('department').value;
-            
+
             // Validation
             let valid = true;
-            
-            if (username.length < 3) {
-                document.getElementById('username-error').style.display = 'block';
-                valid = false;
-            } else {
-                document.getElementById('username-error').style.display = 'none';
-            }
-            
-            if (!validateEmail(email)) {
-                document.getElementById('email-error').style.display = 'block';
-                valid = false;
-            } else {
-                document.getElementById('email-error').style.display = 'none';
-            }
-            
+
             if (fullname.length < 2) {
                 document.getElementById('fullname-error').style.display = 'block';
                 valid = false;
             } else {
                 document.getElementById('fullname-error').style.display = 'none';
             }
-            
+
             if (!valid) {
                 showAlert('Please fix the errors in the form', 'danger');
                 return;
             }
-            
-            // Save to localStorage
-            const profileSettings = {
-                username,
-                email,
-                fullname,
-                department
-            };
-            
-            localStorage.setItem('profileSettings', JSON.stringify(profileSettings));
-            showAlert('Profile settings saved successfully!', 'success');
+
+            try {
+                const response = await fetch('/api/update_profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        fullname: fullname,
+                        department: department
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    showAlert('Profile settings saved successfully!', 'success');
+                    // Update initialUserData for future resets
+                    initialUserData.fullname = fullname;
+                    initialUserData.department = department;
+                    // Update sidebar name immediately
+                    document.getElementById('sidebar-user-name').textContent = fullname;
+                } else {
+                    showAlert(`Error: ${result.message || 'Failed to update profile.'}`, 'danger');
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showAlert('An unexpected error occurred while updating profile.', 'danger');
+            }
         }
-        
+
         function resetProfileForm() {
-            document.getElementById('username').value = 'admin_user';
-            document.getElementById('email').value = 'admin@ongc.com';
-            document.getElementById('fullname').value = 'ONGC Administrator';
-            document.getElementById('department').value = 'Engineering';
-            
+            // Reset to initial loaded data
+            document.getElementById('email').value = initialUserData.email || '';
+            document.getElementById('fullname').value = initialUserData.fullname || '';
+
+            const departmentSelect = document.getElementById('department');
+            if (initialUserData.department) {
+                for (let i = 0; i < departmentSelect.options.length; i++) {
+                    if (departmentSelect.options[i].value === initialUserData.department) {
+                        departmentSelect.options[i].selected = true;
+                        break;
+                    }
+                }
+            }
+
             // Hide any error messages
             document.querySelectorAll('.error-message').forEach(el => {
                 el.style.display = 'none';
             });
-            
-            showAlert('Profile form reset to default values', 'success');
+
+            showAlert('Profile form reset to original values', 'success');
         }
-        
+
         // Dashboard Preferences Functions
         function loadPreferences() {
             const savedPrefs = JSON.parse(localStorage.getItem('dashboardPreferences')) || {};
-            
+
             // Theme
             if (savedPrefs.theme) {
-                document.querySelector(`input[name="theme"][value="${savedPrefs.theme}"]`).checked = true;
-                applyTheme(savedPrefs.theme);
+                const themeRadio = document.querySelector(`input[name="theme"][value="${savedPrefs.theme}"]`);
+                if (themeRadio) {
+                    themeRadio.checked = true;
+                    applyTheme(savedPrefs.theme);
+                }
             }
-            
+
             // Density
             if (savedPrefs.density) {
-                document.querySelector(`input[name="density"][value="${savedPrefs.density}"]`).checked = true;
-                applyDensity(savedPrefs.density);
+                const densityRadio = document.querySelector(`input[name="density"][value="${savedPrefs.density}"]`);
+                if (densityRadio) {
+                    densityRadio.checked = true;
+                    applyDensity(savedPrefs.density);
+                }
             }
-            
+
             // Rows per page
             if (savedPrefs.rowsPerPage) {
                 document.getElementById('rows-per-page').value = savedPrefs.rowsPerPage;
             }
-            
+
             // Date range
             if (savedPrefs.dateRange) {
                 document.getElementById('date-range').value = savedPrefs.dateRange;
             }
         }
-        
+
         function savePreferences() {
             const theme = document.querySelector('input[name="theme"]:checked').value;
             const density = document.querySelector('input[name="density"]:checked').value;
             const rowsPerPage = document.getElementById('rows-per-page').value;
             const dateRange = document.getElementById('date-range').value;
-            
+
             // Save to localStorage
             const preferences = {
                 theme,
@@ -1454,53 +1684,64 @@
                 rowsPerPage,
                 dateRange
             };
-            
+
             localStorage.setItem('dashboardPreferences', JSON.stringify(preferences));
-            
+
             showAlert('Dashboard preferences saved successfully!', 'success');
         }
-        
+
         function resetPreferences() {
             // Reset form to default values
             document.getElementById('theme-light').checked = true;
             document.getElementById('density-normal').checked = true;
             document.getElementById('rows-per-page').value = '25';
-            document.getElementById('date-range').value = 'Last 7 Days';
-            
+            document.getElementById('date-range').value = 'last7days'; // Changed to match value attribute
+
             // Apply default theme and density
             applyTheme('light');
             applyDensity('normal');
             updateThemePreview('light');
             updateDensityPreview('normal');
-            
+
             // Remove saved preferences
             localStorage.removeItem('dashboardPreferences');
-            
+
             showAlert('Preferences reset to default values', 'success');
         }
-        
+
         function applyTheme(theme) {
             if (theme === 'dark') {
                 document.body.classList.add('dark-theme');
             } else {
                 document.body.classList.remove('dark-theme');
             }
+            // For system theme, check user's system preference
+            if (theme === 'system') {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.body.classList.add('dark-theme');
+                } else {
+                    document.body.classList.remove('dark-theme');
+                }
+            }
         }
-        
+
         function updateThemePreview(theme) {
             // Remove active class from all theme options
             document.querySelectorAll('.theme-option').forEach(option => {
                 option.classList.remove('active');
             });
-            
+
             // Add active class to selected theme option
-            document.querySelector(`.theme-option[data-theme="${theme}"]`).classList.add('active');
+            const activeOption = document.querySelector(`.theme-option[data-theme="${theme}"]`);
+            if (activeOption) {
+                activeOption.classList.add('active');
+            }
         }
-        
+
         function applyDensity(density) {
             // Remove existing density classes
             document.body.classList.remove('compact-view', 'spacious-layout');
-            
+
             // Apply new density
             if (density === 'compact') {
                 document.body.classList.add('compact-view');
@@ -1508,126 +1749,184 @@
                 document.body.classList.add('spacious-layout');
             }
         }
-        
+
         function updateDensityPreview(density) {
             // Remove active class from all density options
             document.querySelectorAll('.density-option').forEach(option => {
                 option.classList.remove('active');
             });
-            
+
             // Add active class to selected density option
-            document.querySelector(`.density-option[data-density="${density}"]`).classList.add('active');
+            const activeOption = document.querySelector(`.density-option[data-density="${density}"]`);
+            if (activeOption) {
+                activeOption.classList.add('active');
+            }
         }
-        
+
         // Data Management Functions
-        function exportData() {
+        async function exportData() {
             const format = document.querySelector('input[name="export-format"]:checked').value;
             const includeHistory = document.getElementById('include-history').checked;
-            
+
             document.getElementById('export-status').innerHTML = `
                 <i class="fas fa-spinner fa-spin"></i> Exporting data in ${format.toUpperCase()} format...
             `;
-            
-            // Simulate export process
-            setTimeout(() => {
+
+            try {
+                const response = await fetch(`/api/export_wells?format=${format}&include_history=${includeHistory}`, {
+                    method: 'GET'
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `ongc_well_data_${new Date().toISOString().slice(0,10)}.${format}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+
+                    document.getElementById('export-status').innerHTML = `
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                        Data exported successfully!
+                    `;
+                    showAlert('Data exported successfully!', 'success');
+                } else {
+                    const errorText = await response.text();
+                    document.getElementById('export-status').innerHTML = `
+                        <i class="fas fa-exclamation-circle" style="color: var(--danger);"></i>
+                        Export failed: ${errorText}
+                    `;
+                    showAlert(`Export failed: ${errorText}`, 'danger');
+                }
+            } catch (error) {
+                console.error('Error during data export:', error);
                 document.getElementById('export-status').innerHTML = `
-                    <i class="fas fa-check-circle" style="color: var(--success);"></i> 
-                    Data exported successfully! Download will start shortly.
+                    <i class="fas fa-exclamation-circle" style="color: var(--danger);"></i>
+                    An unexpected error occurred during export.
                 `;
-                
-                // Simulate download
-                setTimeout(() => {
-                    const link = document.createElement('a');
-                    link.href = '#'; // In a real app, this would be the download URL
-                    link.download = `ongc_well_data_${new Date().toISOString().slice(0,10)}.${format}`;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                }, 1000);
-            }, 2000);
+                showAlert('An unexpected error occurred during export.', 'danger');
+            }
         }
-        
-        function importData() {
+
+        async function importData() {
             const fileInput = document.getElementById('data-import');
-            
+
             if (!fileInput.files.length) {
                 showAlert('Please select a file to import', 'danger');
                 return;
             }
-            
+
             const file = fileInput.files[0];
             const fileName = file.name;
             const fileType = fileName.split('.').pop().toLowerCase();
-            
+
             if (!['csv', 'xlsx', 'xls'].includes(fileType)) {
                 showAlert('Invalid file type. Please upload a CSV or Excel file.', 'danger');
                 return;
             }
-            
+
             document.getElementById('import-status').innerHTML = `
                 <i class="fas fa-spinner fa-spin"></i> Importing ${fileName}...
             `;
-            
-            // Simulate import process
-            setTimeout(() => {
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/import_wells', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    document.getElementById('import-status').innerHTML = `
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                        Successfully imported ${result.records_imported} records from ${fileName}.
+                    `;
+                    showAlert(`Successfully imported ${result.records_imported} records!`, 'success');
+                    // Optionally, refresh dashboard data if import affects it
+                    // fetchWellData();
+                    // fetchStats();
+                } else {
+                    document.getElementById('import-status').innerHTML = `
+                        <i class="fas fa-exclamation-circle" style="color: var(--danger);"></i>
+                        Import failed: ${result.message || 'Unknown error'}
+                    `;
+                    showAlert(`Import failed: ${result.message || 'Unknown error'}`, 'danger');
+                }
+            } catch (error) {
+                console.error('Error during data import:', error);
                 document.getElementById('import-status').innerHTML = `
-                    <i class="fas fa-check-circle" style="color: var(--success);"></i> 
-                    Successfully imported 1,245 records from ${fileName}
+                    <i class="fas fa-exclamation-circle" style="color: var(--danger);"></i>
+                    An unexpected error occurred during import.
                 `;
-                
+                showAlert('An unexpected error occurred during import.', 'danger');
+            } finally {
                 // Reset file input
                 fileInput.value = '';
                 document.getElementById('selected-file').textContent = 'No file selected';
-            }, 3000);
+            }
         }
-        
+
         function updateRetention() {
             const retentionDays = document.getElementById('data-retention').value;
             const retentionText = retentionDays === '0' ? 'Indefinitely' : `${retentionDays} days`;
-            
-            // Calculate new storage usage (mock calculation)
-            const newUsage = retentionDays === '0' ? 85 : 
-                             retentionDays === '7' ? 25 : 
-                             retentionDays === '30' ? 45 : 
-                             retentionDays === '90' ? 65 : 75;
-            
+
+            // Simulate new storage usage based on retention (for frontend display only)
+            let newUsage;
+            switch(retentionDays) {
+                case '7': newUsage = 25; break;
+                case '30': newUsage = 45; break;
+                case '90': newUsage = 65; break;
+                case '365': newUsage = 75; break;
+                case '0': newUsage = 85; break; // Indefinitely might mean more data
+                default: newUsage = 65;
+            }
+
             document.getElementById('storage-bar').style.width = `${newUsage}%`;
             document.getElementById('storage-text').textContent = `${newUsage}% storage used`;
-            
+
             showAlert(`Data retention period set to ${retentionText}`, 'success');
+            // In a real application, you would send this setting to the backend
+            // fetch('/api/update_retention', { method: 'POST', body: JSON.stringify({ retention_days: retentionDays }) });
         }
-        
+
         function saveRefreshInterval() {
             const interval = document.getElementById('refresh-interval').value;
             const intervalText = interval === '0' ? 'Manual' : `${interval} minutes`;
-            
+
             showAlert(`Refresh interval set to ${intervalText}`, 'success');
+            // In a real application, you would send this setting to the backend
+            // fetch('/api/update_refresh_interval', { method: 'POST', body: JSON.stringify({ interval_minutes: interval }) });
         }
-        
+
         function refreshNow() {
             document.getElementById('last-refresh').textContent = 'Refreshing...';
-            
+
             // Simulate refresh
             setTimeout(() => {
                 document.getElementById('last-refresh').textContent = new Date().toLocaleTimeString();
                 showAlert('Data refreshed successfully!', 'success');
+                // In a real application, you might trigger a data fetch here
+                // fetchWellData();
+                // fetchStats();
             }, 1500);
         }
-        
+
         // Utility Functions
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-        
         function showAlert(message, type) {
             const alert = document.getElementById('alert-message');
             const alertText = document.getElementById('alert-text');
-            
+
             alertText.textContent = message;
             alert.className = `alert alert-${type}`;
             alert.style.display = 'flex';
-            
+
             // Hide after 3 seconds
             setTimeout(() => {
                 alert.style.display = 'none';
